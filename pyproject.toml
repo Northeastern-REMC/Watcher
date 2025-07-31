@@ -9,11 +9,20 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "flask>=3.1.1",
+    "flask-sqlalchemy>=3.1.1",
+    "pyodbc>=5.2.0",
 ]
-
-[project.scripts]
-watcher = "watcher:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "pytest>=8.4.1",
+]
+
+[tool.isort]
+profile = "black"
