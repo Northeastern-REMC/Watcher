@@ -1,4 +1,5 @@
 from flask import Flask
+from watcher import home
 
 
 def ignite() -> Flask:
@@ -8,5 +9,7 @@ def ignite() -> Flask:
         Flask: Flask application with all attached routes and middleware
     """
     app = Flask(__name__)
+    
+    app.register_blueprint(home.bp)
     
     return app
