@@ -1,34 +1,17 @@
 {% extends 'base.jinja.html' %}
 
 {% block body %}
+
+{% from "_formhelpers.jinja.html" import render_field %}
+
 <form action="/" method="POST">
-    <label for="station-select">Station</label>
-    <select name="station" id="station-select">
-        <option value="aboite">Aboite</option>
-        <option value="gateway">Gateway</option>
-        <option value="indianCreek">Indian Creek</option>
-        <option value="perry">Perry</option>
-        <option value="woodland">Woodland</option>
-    </select>
-
-    <label for="ess-select">Ess</label>
-    <select name="ess" id="ess-select">
-
-    </select>
-
-    <label for="date-select">Date</label>
-    <select name="date" id="date-select">
-        {% for date in dates %}
-        <option value="{{date}}">{{date}}</option>
-        {% endfor %}
-    </select>
-    
-    <label for="type-select">Type</label>
-    <select name="type" id="type-select">
-        <option value="alarm">Alarm</option>
-        <option value="fault">Fault</option>
-    </select>
-    
-    <button type="submit">Submit</button>
+    {{ form.csrf_token }}
+    <dl>
+        {{ render_field(form.station_select) }}
+        {{ render_field(form.ess_select) }}
+        {{ render_field(form.date_select) }}
+        {{ render_field(form.type_select) }}
+        {{ render_field(form.submit_button) }}
+    </dl>
 </form>
 {% endblock %}
