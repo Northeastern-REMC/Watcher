@@ -1,10 +1,11 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask
 from sqlalchemy import URL
+
 from watcher import home
 from watcher.db import db
-import os
-from dotenv import load_dotenv
-from urllib import parse
 
 
 def ignite() -> Flask:
@@ -23,14 +24,14 @@ def ignite() -> Flask:
         port=int(os.environ["WATCHER_DB_PORT"]),
         database=os.environ["WATCHER_DB_NAME"],
         query={
-            "driver": "ODBC Driver 18 for SQL Server",
-            "TrustServerCertificate": "yes"
+            "driver": f"ODBC Driver {os.environ["WATCHER_DB_DRIVER_VERSION"]} for SQL Server",
+            "TrustServerCertificate": "yes",
         },
     )
     app.config["SQLALCHEMY_DATABASE_URI"] = connection_url
-    
+
     db.init_app(app)
-    
+
     app.register_blueprint(home.bp)
-    
+
     return app
