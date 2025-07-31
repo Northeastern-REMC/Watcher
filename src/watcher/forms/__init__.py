@@ -26,4 +26,4 @@ class SubmissionForm(FlaskForm):
     )
     date_select = SelectField("Date")
     type_select = SelectField("Type", choices=[("alarm", "Alarm"), ("fault", "Fault")])
-    submit_button = SubmitField("Submit")
+    submit_button = SubmitField("Download")

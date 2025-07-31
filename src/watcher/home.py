@@ -1,4 +1,5 @@
-from flask import Blueprint, redirect, render_template, request, url_for
+import io
+from flask import Blueprint, redirect, render_template, request, send_file, url_for
 from sqlalchemy import text
 from datetime import datetime, timedelta
 from collections import OrderedDict
@@ -7,47 +8,67 @@ from watcher.db import db
 from watcher.constants import IGNITION_EPOCH, NREMC_TIMEZONE
 from watcher.forms import SubmissionForm
 
+import pandas as pd
+
 bp = Blueprint("home", __name__, url_prefix="/")
 
-def pop(form):
+def get_sub_form():
     current_date = datetime.now(NREMC_TIMEZONE)
-    dates = OrderedDict()
-    cursor = IGNITION_EPOCH.replace(day=1)
-    while cursor <= current_date:
-        month_str = cursor.strftime("%m-%Y")
-        dates[month_str] = None
-        # Go to the first day of the next month
-        if cursor.month == 12:
-            cursor = cursor.replace(year=cursor.year + 1, month=1)
-        else:
-            cursor = cursor.replace(month=cursor.month + 1)
-    
-    form.date_select.choices = [(d, d) for d in dates]
+    form = SubmissionForm(request.form)
+    form.date_select.choices = [(d, d) for d in pd.date_range(IGNITION_EPOCH, current_date, freq="MS").strftime(r"%m-%Y").tolist()]
+    return form
 
 
 @bp.get("/")
 def index():
-    current_date = datetime.now(NREMC_TIMEZONE)
-    dates = OrderedDict(
-        ((IGNITION_EPOCH + timedelta(_)).strftime(r"%m-%Y"), None)
-        for _ in range((current_date - IGNITION_EPOCH).days)
-    ).keys()
-    form = SubmissionForm()
-    pop(form)
+    form = get_sub_form()
 
     return render_template("index.jinja.html", form=form)
 
 
 @bp.post("/")
 def get_info():
-    form = SubmissionForm(request.form)
-    pop(form)
+    form = get_sub_form()
     
     if form.validate():
         station = form.station_select.data
         ess = form.ess_select.data
         date = form.date_select.data
         error_type = form.type_select.data
-        return redirect(url_for("home.index"))
+        
+        tag_path = f"'%nremc/bess/{station}/{ess}/bms/state/{error_type}2%'"
+        month, year = date.split("-")
+
+        sql_query = (
+            "WITH MatchingTags AS (\n"
+            "   SELECT\n"
+            "       id as tagid,\n"
+            "       tagpath\n"
+            "   FROM [dbNREMCHistorianBESSSTS].[dbo].[sqlth_te]\n"
+            "   WHERE retired is NULL\n"
+            f"     AND tagpath LIKE {tag_path}\n"
+            ")\n"
+            "SELECT\n"
+            "   d.tagid,\n"
+            "   t.tagpath,\n"
+            "   d.t_stamp,\n"
+            "   d.floatvalue,\n"
+            "   d.intvalue\n"
+            "FROM MatchingTags t\n"
+            f"JOIN [dbNREMCHistorianBESSSTS].[dbo].[sqlt_data_2_{year}_{month}] d\n" #! DO NOT DO THIS SHIT THIS IS BAD
+            "   ON t.tagid = d.tagid\n"
+            "ORDER BY d.t_stamp DESC;"
+        )
+        df = pd.read_sql(sql_query, db.engine) # type: ignore
+        df["t_stamp"] = pd.to_datetime(df["t_stamp"], unit="ms")
+        print(df)
+        
+        csv_file = io.BytesIO()
+        df.to_csv(csv_file, index=False, header=True)
+        csv_file.seek(0)
+        
+        return send_file(
+            csv_file, mimetype="text/csv", as_attachment=True, download_name=f"{station}-{year}{month}-{ess}-{error_type}.csv"
+        )
     else:
         return "FUCK YOU", 400
