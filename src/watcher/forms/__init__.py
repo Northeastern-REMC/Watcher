@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField, RadioField
+from wtforms import RadioField, SelectField, SubmitField
 
 
 class SubmissionForm(FlaskForm):
@@ -26,5 +26,9 @@ class SubmissionForm(FlaskForm):
     )
     date_select = SelectField("Date")
     type_select = SelectField("Type", choices=[("alarm", "Alarm"), ("fault", "Fault")])
-    action_radio = RadioField("Action", choices=[("download", "Download"), ("display", "Display")], default="download")
+    action_radio = RadioField(
+        "Action",
+        choices=[("download", "Download"), ("display", "Display")],
+        default="download",
+    )
     submit_button = SubmitField("Submit")

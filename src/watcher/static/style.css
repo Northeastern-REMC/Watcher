@@ -165,14 +165,79 @@ fieldset {
     margin-bottom: 0.4rem;
 }
 
-.dropdown-toggle::after {
-    content: "▾";
-    float: right;
-    font-size: 1.1rem;
-    color: #ccc;
-    transition: transform 0.3s ease;
+.list-group-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.dropdown-toggle.open::after {
-     content: "▴";
+.dropdown-arrow::after {
+  content: "▾";
+  font-size: 1.1rem;
+  color: #ccc;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-toggle.open .dropdown-arrow::after {
+  content: "▴";
+}
+
+.scrollable-list {
+  max-height: 70vh;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 500px;
+  padding-right: 4px;
+  box-sizing: border-box;
+}
+
+.scrollable-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-group .btn {
+  flex: 1 1 30%;
+  max-width: 120px;
+}
+
+a.btn {
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .card-header {
+    font-size: 2.5rem;
+  }
+
+  .list-group-item {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .sub-list .list-group-item {
+    font-size: 0.9rem;
+    padding-left: 1rem;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .dropdown-arrow::after {
+    font-size: 1rem;
+  }
 }
