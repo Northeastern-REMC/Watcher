@@ -2,16 +2,22 @@
 
 {% block body %}
 
-{% from "_formhelpers.jinja.html" import render_field %}
+{% from "_formhelpers.jinja.html" import render_radio_form_field, render_select_form_field, render_submit_form_field %}
+<div class="card">
+    <div class="card-header">
+        Battery Watcher
+    </div>
+    <div class="card-body">
+        <form action="/" method="POST">
+            {{ form.csrf_token }}
+            {{ render_select_form_field(form.station_select) }}
+            {{ render_select_form_field(form.ess_select) }}
+            {{ render_select_form_field(form.date_select) }}
+            {{ render_select_form_field(form.type_select) }}
+            {{ render_radio_form_field(form.action_radio) }}
+            {{ render_submit_form_field(form.submit_button) }}
+        </form>
+    </div>
+</div>
 
-<form action="/" method="POST">
-    {{ form.csrf_token }}
-    <dl>
-        {{ render_field(form.station_select) }}
-        {{ render_field(form.ess_select) }}
-        {{ render_field(form.date_select) }}
-        {{ render_field(form.type_select) }}
-        {{ render_field(form.submit_button) }}
-    </dl>
-</form>
 {% endblock %}

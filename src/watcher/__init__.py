@@ -4,10 +4,10 @@ from cachelib import FileSystemCache
 from dotenv import load_dotenv
 from flask import Flask
 from sqlalchemy import URL
-from flask_session import Session
+from flask_session import Session # pyright: ignore[reportMissingTypeStubs]
 from watcher import home
 from watcher.db import db
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect # pyright: ignore[reportMissingTypeStubs]
 
 
 def ignite() -> Flask:

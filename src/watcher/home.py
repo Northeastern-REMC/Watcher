@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from collections import OrderedDict
 
 from watcher.db import db
-from watcher.constants import IGNITION_EPOCH, NREMC_TIMEZONE
+from watcher.constants import ALARM_BIT_MAP, FAULT_BIT_MAP, IGNITION_EPOCH, NREMC_TIMEZONE
 from watcher.forms import SubmissionForm
 
 import pandas as pd
@@ -60,8 +60,18 @@ def get_info():
             "ORDER BY d.t_stamp DESC;"
         )
         df = pd.read_sql(sql_query, db.engine) # type: ignore
-        df["t_stamp"] = pd.to_datetime(df["t_stamp"], unit="ms")
-        print(df)
+        df["station"] = station
+        df["type"] = error_type
+        df["timestamp"] = pd.to_datetime(df["t_stamp"], unit="ms")
+        
+        if error_type == "fault":
+            for bit, label in FAULT_BIT_MAP.items():
+                df[label] = df["intvalue"].apply(lambda x: bool((x >> bit) & 1))
+        else:
+            for bit, label in ALARM_BIT_MAP.items():
+                df[label] = df["intvalue"].apply(lambda x: bool((x >> bit) & 1))
+        
+        df = df.drop(columns=["t_stamp", "floatvalue", "tagid","tagpath", "intvalue"])
         
         csv_file = io.BytesIO()
         df.to_csv(csv_file, index=False, header=True)

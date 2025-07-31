@@ -1,0 +1,122 @@
+html, body {
+    height: 100%;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    background-color: #111927;
+    background-image: url('./background.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    font-family: "League Spartan", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    display: grid;
+    place-items: center;
+    position: relative;
+    color: white;
+}
+
+
+.f2 {
+    font-size: 2rem;
+}
+
+.card-header {
+    font-size: 3.5rem;
+    text-align: center;
+    border-bottom: 1px solid white;
+    margin-bottom: 1rem;
+}
+
+.card {
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(12px) saturate(150%);
+    background-color: rgba(17, 25, 39, 0.69);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 1.5rem;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.form-control {
+    width: 100%;
+    appearance: none;
+    background-clip: padding-box;
+    border-radius: 4px;
+    box-shadow: 0;
+    display: block;
+    padding: 0.5rem 1rem;
+    background-color: #1f2a37;
+    border: 1px solid #4b5663;
+    color: white;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+input[type=radio] {
+  border: none;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+input[type=radio]:checked {
+  accent-color: #008ed6;
+  border: none;
+}
+
+fieldset {
+    border-radius: 4px;
+}
+
+.btn {
+  background-color: #008ed6;
+  background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0.15), hsla(0, 0%, 100%, 0));
+  text-transform: none;
+  margin: 0;
+  width: 100%;
+  border-color: #008ed6;
+  box-shadow: 0 1px 1px rgba(18, 21, 26, 0.75);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  user-select: none;
+  vertical-align: middle;
+  color: white;
+  margin-top: 1rem;
+}
