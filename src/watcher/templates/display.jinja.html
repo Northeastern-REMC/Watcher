@@ -1,0 +1,35 @@
+{% extends 'base.jinja.html' %}
+
+{% block body %}
+
+<div class="card">
+  <div class="scrollable-list">
+    <ul class="list-group">
+      {% for ts, labels in paginated %}
+      <li class="list-group-item dropdown-toggle">
+        <div class="list-group-item-header">
+          <span class="list-group-item-title">Station: {{ station }}({{ error_type }}) @ {{ ts }}</span>
+          <span class="dropdown-arrow"></span>
+        </div>
+        <ul class="sub-list">
+          {% if labels %}
+          {% for label in labels %}
+            <li class="list-group-item">ERROR: {{ label }}</li>
+          {% endfor %}
+          {% else %}
+            <li class="list-group-item">Returned Error State was NULL</li>
+          {% endif %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="btn-group">
+<a href="{{ url_for('home.display', station=station, ess=ess, date=date, error_type=error_type, page=prev_page) }}" class="btn"><</a>
+<a href="{{ url_for('home.index') }}" class="btn">Home</a>
+<a href="{{ url_for('home.display', station=station, ess=ess, date=date, error_type=error_type, page=next_page) }}" class="btn">></a>
+</div>
+</div>
+
+<script src="{{ url_for('static', filename='main.js')}}" defer></script>
+{% endblock %}

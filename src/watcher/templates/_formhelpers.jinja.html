@@ -1,0 +1,22 @@
+{% macro render_select_form_field(field) %}
+<div class="mb-2">
+  {{ field.label(class_="f2") }}
+  {{ field(class_="form-control")|safe }}
+</div>
+{% endmacro %}
+
+{% macro render_radio_form_field(field) %}
+<div class="mb-2">
+  <fieldset>
+    <legend class="f2">{{ field.label }}</legend>
+    {{ field()|safe }}
+  </fieldset>
+  
+</div>
+{% endmacro %}
+
+{% macro render_submit_form_field(field) %}
+<div class="submit">
+  {{ field(class_="btn")|safe }}
+</div>
+{% endmacro %}
