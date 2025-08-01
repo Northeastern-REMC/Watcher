@@ -6,6 +6,7 @@ from flask_session import Session  # pyright: ignore[reportMissingTypeStubs]
 from flask_wtf.csrf import CSRFProtect  # pyright: ignore[reportMissingTypeStubs]
 from redis import Redis
 from sqlalchemy import URL
+from cachelib import SimpleCache
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from watcher import home
@@ -37,8 +38,9 @@ def ignite() -> Flask:
     )
     app.config["SQLALCHEMY_DATABASE_URI"] = connection_url
 
-    app.config["SESSION_TYPE"] = "redis"
-    app.config["SESSION_REDIS"] = Redis.from_url("redis://127.0.0.1:6379")
+    app.config["SESSION_TYPE"] = "cachelib"
+    app.config["SESSION_CACHELIB"] = SimpleCache()
+    app.config["CACHE_TYPE"] = "SimpleCache"
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1, x_for=1, x_prefix=1)
     Session(app)
 
