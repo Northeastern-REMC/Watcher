@@ -38,9 +38,7 @@ def ignite() -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = connection_url
 
     app.config["SESSION_TYPE"] = "redis"
-    app.config["SESSION_REDIS"] = Redis(
-        host="127.0.0.1", port=int(os.environ["WATCHER_REDIS_PORT"])
-    )
+    app.config["SESSION_REDIS"] = Redis.from_url("redis://127.0.0.1:6379")
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1, x_for=1, x_prefix=1)
     Session(app)
 
