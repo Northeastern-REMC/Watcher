@@ -8,7 +8,9 @@ from flask_wtf.csrf import CSRFProtect  # pyright: ignore[reportMissingTypeStubs
 from sqlalchemy import URL
 
 from watcher import home
+from redis import Redis
 from watcher.db import db
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 def ignite() -> Flask:
@@ -18,7 +20,7 @@ def ignite() -> Flask:
         Flask: Flask application with all attached routes and middleware
     """
     app = Flask(__name__)
-    load_dotenv()
+    load_dotenv("stack.env")
     app.config["SECRET_KEY"] = os.environ["WATCHER_SECRET"]
 
     csrf = CSRFProtect()
@@ -36,11 +38,9 @@ def ignite() -> Flask:
     )
     app.config["SQLALCHEMY_DATABASE_URI"] = connection_url
 
-    app.config["SESSION_TYPE"] = "cachelib"
-    app.config["SESSION_SERIALIZATION_FORMAT"] = "json"
-    app.config["SESSION_CACHELIB"] = FileSystemCache(
-        threshold=500, cache_dir="./src/watcher/session"
-    )
+    app.config["SESSION_TYPE"] = "redis"
+    app.config["SESSION_REDIS"] = Redis(host="127.0.0.1", port=int(os.environ["WATCHER_REDIS_PORT"]))
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1, x_for=1, x_prefix=1)
     Session(app)
 
     csrf.init_app(app)  # type: ignore
