@@ -162,10 +162,10 @@ def get_info():
 
         if error_type == "fault":
             for bit, label in FAULT_BIT_MAP.items():
-                df[label] = df["intvalue"].apply(lambda x: bool((x >> bit) & 1)) # type: ignore
+                df[label] = df["intvalue"].apply(lambda x: bool((x >> bit) & 1))  # type: ignore
         else:
             for bit, label in ALARM_BIT_MAP.items():
-                df[label] = df["intvalue"].apply(lambda x: bool((x >> bit) & 1)) # type: ignore
+                df[label] = df["intvalue"].apply(lambda x: bool((x >> bit) & 1))  # type: ignore
 
         df = df.drop(columns=["t_stamp", "floatvalue", "tagid", "tagpath", "intvalue"])
 
